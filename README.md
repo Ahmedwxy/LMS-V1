@@ -59,9 +59,9 @@ multer — File upload middleware (for profile pictures)
 nodemon (dev) — Auto-reload server
 
 ## Future Changes
-Adding a functionality where a instructor could not login without a special admin token, basically protecting the instructor registration route
-Adding attendance functionality, grading system, assignments and some more ideas.
-Adding reset password functionality for students.
+1. Adding a functionality where a instructor could not login without a special admin token, basically protecting the instructor registration route
+2. Adding attendance functionality, grading system, assignments and some more ideas.
+3. Adding reset password functionality for students.
 
 ## Contributing
 Pull requests are welcome. For major changes, open an issue first to discuss what you’d like to change.
