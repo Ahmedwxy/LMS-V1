@@ -80,4 +80,71 @@ const unenrollCourse = asyncHandler(async (req, res) => {
     res.json({ message: "Unenrolled successfully", course });
 });
 
-module.exports = { createCourse, getCourses, enrollCourse, unenrollCourse };
+// Instructor marks attendance for students
+const markAttendance = asyncHandler(async (req, res) => {
+    if (req.user.role !== "instructor" && req.user.role !== "admin") {
+        res.status(403);
+        throw new Error("Only instructors or admins can mark attendance");
+    }
+
+    const course = await Course.findById(req.params.id);
+    if (!course) {
+        res.status(404);
+        throw new Error("Course not found");
+    }
+
+    const { attendanceList, date } = req.body; // [{ studentId, present }, ...]
+    if (!attendanceList || !Array.isArray(attendanceList)) {
+        res.status(400);
+        throw new Error("Attendance list is required");
+    }
+
+    attendanceList.forEach(({ studentId, present }) => {
+        if (!course.studentsEnrolled.includes(studentId)) return; // Only enrolled students
+
+        let studentAttendance = course.attendance.find(a => a.student.toString() === studentId);
+        if (!studentAttendance) {
+            studentAttendance = { student: studentId, records: [] };
+            course.attendance.push(studentAttendance);
+        }
+        studentAttendance.records.push({ date: date ? new Date(date) : new Date(), present });
+    });
+
+    await course.save();
+    res.json({ message: "Attendance marked" });
+});
+
+// Student checks attendance for all courses
+const getStudentAttendance = asyncHandler(async (req, res) => {
+    const courses = await Course.find({ studentsEnrolled: req.user._id });
+    const attendance = courses.map(course => {
+        const att = course.attendance.find(a => a.student.toString() === req.user._id.toString());
+        return {
+            courseId: course._id,
+            title: course.title,    
+            attendance: att ? att.records : []
+        };
+    });
+    res.json(attendance);
+});
+
+// Student checks attendance for a specific course
+const getStudentAttendanceByCourse = asyncHandler(async (req, res) => {
+    const course = await Course.findById(req.params.id);
+    if (!course) {
+        res.status(404);
+        throw new Error("Course not found");
+    }
+    if (!course.studentsEnrolled.includes(req.user._id)) {
+        res.status(403);
+        throw new Error("Not enrolled in this course");
+    }
+    const att = course.attendance.find(a => a.student.toString() === req.user._id.toString());
+    res.json({
+        courseId: course._id,
+        title: course.title,
+        attendance: att ? att.records : []
+    });
+});
+
+module.exports = { createCourse, getCourses, enrollCourse, unenrollCourse, markAttendance, getStudentAttendance, getStudentAttendanceByCourse };

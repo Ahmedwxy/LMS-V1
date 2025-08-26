@@ -19,6 +19,17 @@ const courseSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Student",
         }
+    ],
+    attendance: [
+        {
+            student: { type: mongoose.Schema.Types.ObjectId, ref: "Student" },
+            records: [
+                {
+                    date: { type: Date, required: true },
+                    present: { type: Boolean, required: true }
+                }
+            ]
+        }
     ]
 }, {
     timestamps: true,
