@@ -48,6 +48,14 @@ GET     /api/instructors/profile   # Get logged-in instrustor (requires token)
 PUT     /api/instructors/profile   # Update instructor profile (name, password, profile picture)
 ```
 
+Course Routes
+```http
+GET     /api/courses/               # Get all courses (PUBLIC)
+POST    /api/courses/               # Create Courses (Only admin or instructor could do so)
+POST    /api/courses/:id/enroll     # Enroll in a course as a student
+POST    /api/courses/:id/unenroll   # Unenroll from a course as a student
+```
+
 ## Modules Used
 express — Web framework for API
 mongoose — MongoDB object modeling
