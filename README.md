@@ -1,7 +1,10 @@
 # Learning Management System.
 
 This is my ongoing backend learning project built with **Node.js**, **Express**, and **MongoDB**.  
-I have added students, instructors, and courses. Students can login to check for available courses and register in the courses. Instructors can login and create new courses for students to enroll in.
+I have added students, instructors, and courses. Students can login to check for available courses, enroll and unenroll from the courses. Instructors can login and create new courses for students to enroll in.
+
+New:
+Instructors can mark/update attendance of enrolled students. students can view their attendance.
 
 ## Installation
 
