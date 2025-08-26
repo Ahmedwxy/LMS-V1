@@ -53,10 +53,13 @@ PUT     /api/instructors/profile   # Update instructor profile (name, password, 
 
 Course Routes
 ```http
-GET     /api/courses/               # Get all courses (PUBLIC)
-POST    /api/courses/               # Create Courses (Only admin or instructor could do so)
-POST    /api/courses/:id/enroll     # Enroll in a course as a student
-POST    /api/courses/:id/unenroll   # Unenroll from a course as a student
+GET     /api/courses/                # Get all courses (PUBLIC)
+POST    /api/courses/                # Create Courses (Only admin or instructor could do so)
+POST    /api/courses/:id/enroll      # Enroll in a course as a student
+POST    /api/courses/:id/unenroll    # Unenroll from a course as a student
+POST    /api/courses/:id/attendance  # Mark attendance as instructor 
+GET     /api/courses/attendance      # Check attendance of all courses as student
+GET     /api/courses/:id/attendance  # Check attendance of a course as student
 ```
 
 ## Modules Used
