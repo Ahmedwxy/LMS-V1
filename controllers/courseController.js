@@ -52,4 +52,32 @@ const enrollCourse = asyncHandler(async (req, res) => {
     res.json({ message: "Enrolled successfully", course });
 });
 
-module.exports = { createCourse, getCourses, enrollCourse };
+// Student unenrolls from course
+const unenrollCourse = asyncHandler(async (req, res) => {
+    if (!req.user || req.user.role) {
+        // If user has role field, it's instructor/admin
+        if (req.user.role === "instructor" || req.user.role === "admin") {
+            res.status(403);
+            throw new Error("Only students can unenroll");
+        }
+    }
+
+    const course = await Course.findById(req.params.id);
+    if (!course) {
+        res.status(404);
+        throw new Error("Course not found");
+    }
+
+    const studentIndex = course.studentsEnrolled.indexOf(req.user._id);
+    if (studentIndex === -1) {
+        res.status(400);
+        throw new Error("You are not enrolled in this course");
+    }
+
+    course.studentsEnrolled.splice(studentIndex, 1);
+    await course.save();
+
+    res.json({ message: "Unenrolled successfully", course });
+});
+
+module.exports = { createCourse, getCourses, enrollCourse, unenrollCourse };
